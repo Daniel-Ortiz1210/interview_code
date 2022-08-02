@@ -25,19 +25,19 @@ class Person:
         self.name = name
         return self.name
     
-    def set_age(self, age) -> int:
+    def set_age(self, age: int) -> int:
         self.age = age
         return self.age
     
-    def set_weigth(self, weight):
+    def set_weigth(self, weight) -> float:
         selg.weight = weight
         return self.weight
     
-    def set_height(self, height):
+    def set_height(self, height) -> float:
         self.height = height
         return self.height
     
-    def get_imc(self):
+    def get_imc(self) -> int:
         height = self.height / 100
         imc = round(self.weight / (height ** 2), 2)
         if self.SEX == "H":
