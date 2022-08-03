@@ -1,5 +1,6 @@
 from random import randint, randrange
-
+class NotValidSex(Exception):
+    pass
 
 class Person:
     def __init__(self, name: str, age: int, weight: float, height: float):
@@ -18,6 +19,15 @@ class Person:
             nss += chars[randint(0, len(chars)-1)]
         return nss
     
+    def validate_sex(func):
+        def wrapper(*args, **kwargs):
+            obj, sex = func(*args, **kwargs)
+            if sex in ["H", "M"]:
+                obj.SEX = sex
+            else:
+                raise NotValidSex
+        return wrapper
+
     def is_an_adult(self) -> bool:
         return self.age >= 18
     
@@ -37,23 +47,21 @@ class Person:
         self.height = height
         return self.height
     
+    @validate_sex
+    def set_sex(self, sex: str) -> str:
+        return self, sex
+    
     def get_imc(self) -> int:
         height = self.height / 100
         imc = round(self.weight / (height ** 2), 2)
         if self.SEX == "H":
-            if imc < 20:
-                return -1
-            elif imc >= 20 and imc <= 25:
-                return 0
-            else:
-                return 1
+            if imc < 20: return -1
+            elif imc >= 20 and imc <= 25: return 0
+            else: return 1
         else:
-            if imc < 19:
-                return -1
-            elif imc >= 19 and imc <= 24:
-                return 0
-            else:
-                return 1
+            if imc < 19: return -1
+            elif imc >= 19 and imc <= 24: return 0
+            else: return 1
 
     def __str__(self):
         return f'Name: {self.name}, Age: {self.age}, Sex: {self.SEX}, NSS: {self.nss}, Weight: {self.weight}, Height: {self.height}'
@@ -67,6 +75,7 @@ height = float(input("Ingresa tu altura en CM: "))
 
 
 person = Person(name=name, age=age, weight=weigth, height=height)
+person.set_sex(sex)
 weigth_status = person.get_imc()
 
 print("Es mayor de edad" if person.is_an_adult() else "No es mayor de edad")
@@ -77,6 +86,7 @@ elif weigth_status == 0:
     print("Estas en tu peso normal")
 else:
     print("Tienes sobrepeso!")
+
 
 print(person)
 
